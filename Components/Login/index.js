@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import * as actionCreators from "../../store/actions/authActions";
+import { AsyncStorage } from "react-native";
 
 // NativeBase Components
 import {
@@ -20,6 +22,24 @@ class Login extends Component {
   static navigationOptions = {
     title: "Login"
   };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: "",
+      password: ""
+    };
+    this.handleLogin = this.handleLogin.bind(this);
+    this.handleSignUp = this.handleSignUp.bind(this);
+  }
+
+  handleLogin() {
+    this.props.login(this.state, this.props.navigation);
+  }
+  handleSignUp() {
+    this.props.signup(this.state, this.props.navigation);
+  }
+
   render() {
     return (
       <Content>
@@ -39,7 +59,11 @@ class Login extends Component {
                     marginBottom: 10
                   }}
                 >
-                  <Input autoCorrect={false} autoCapitalize="none" />
+                  <Input
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    onChangeText={value => this.setState({ username: value })}
+                  />
                 </Item>
                 <Body>
                   <Label style={{ color: "white" }}>Password</Label>
@@ -52,23 +76,16 @@ class Login extends Component {
                     autoCorrect={false}
                     secureTextEntry
                     autoCapitalize="none"
+                    onChangeText={value => this.setState({ password: value })}
                   />
                 </Item>
               </Form>
             </Body>
           </ListItem>
-          <Button
-            full
-            success
-            onPress={() => this.props.navigation.navigate("CoffeeList")}
-          >
+          <Button full success onPress={() => this.handleLogin()}>
             <Text>Login</Text>
           </Button>
-          <Button
-            full
-            warning
-            onPress={() => this.props.navigation.navigate("CoffeeList")}
-          >
+          <Button full warning onPress={() => this.handleSignUp()}>
             <Text>Register</Text>
           </Button>
         </List>
@@ -80,4 +97,19 @@ class Login extends Component {
   }
 }
 
-export default Login;
+const mapDispatchToProps = dispatch => ({
+  login: (userData, history) =>
+    dispatch(actionCreators.loginUser(userData, history)),
+  signup: (userData, history) =>
+    dispatch(actionCreators.registerUser(userData, history))
+});
+const mapStateToProps = state => {
+  return {
+    isAuthed: state.auth.isAuthenticated
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Login);

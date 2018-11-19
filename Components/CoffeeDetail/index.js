@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { AsyncStorage } from "react-native";
 
 // NativeBase Components
 import {
@@ -28,7 +29,8 @@ class CoffeeDetail extends Component {
     super(props);
     this.state = {
       drink: "Coffee",
-      option: "Small"
+      option: "Small",
+      logged: false
     };
   }
 
@@ -38,7 +40,11 @@ class CoffeeDetail extends Component {
       <Button
         light
         transparent
-        onPress={() => navigation.navigate("CoffeeCart")}
+        onPress={
+          navigation.getParam("isAuthed")
+            ? () => navigation.navigate("CoffeeCart")
+            : () => navigation.replace("Login")
+        }
       >
         <Text>
           {navigation.getParam("quantity", 0)}{" "}
@@ -52,8 +58,18 @@ class CoffeeDetail extends Component {
     )
   });
 
-  componenDidMount() {
-    this.props.navigation.setParams({ quantity: this.props.quantity });
+  componentDidMount() {
+    AsyncStorage.getItem("token").then(token => {
+      if (token) {
+        this.setState({ logged: true });
+      } else {
+        this.setState({ logged: false });
+      }
+      this.props.navigation.setParams({
+        quantity: this.props.quantity,
+        isAuthed: this.state.logged
+      });
+    });
   }
 
   componentDidUpdate(prevProps) {

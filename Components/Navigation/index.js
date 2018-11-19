@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { createStackNavigator } from "react-navigation";
 
 // Components
@@ -8,25 +8,25 @@ import CoffeeCart from "../CoffeeCart";
 import Login from "../Login";
 
 export default createStackNavigator(
-    {
-      CoffeeList: CoffeeList,
-      CoffeeDetail: CoffeeDetail,
-      CoffeeCart: CoffeeCart,
-      Login: Login
-    },
-    {
-      initialRouteName: "Login",
-      navigationOptions: {
-        headerTintColor: "white",
-        headerStyle: {
-          backgroundColor: "transparent"
-        },
-        headerTextStyle: {
-          fontWeight: "bold"
-        }
+  {
+    CoffeeList: CoffeeList,
+    CoffeeDetail: CoffeeDetail,
+    CoffeeCart: CoffeeCart,
+    Login: Login
+  },
+  {
+    initialRouteName: "CoffeeList",
+    navigationOptions: {
+      headerTintColor: "white",
+      headerStyle: {
+        backgroundColor: "transparent"
       },
-      cardStyle: {
-        backgroundColor: "rgb(20,90,100)"
+      headerTextStyle: {
+        fontWeight: "bold"
       }
+    },
+    cardStyle: {
+      backgroundColor: "rgb(20,90,100)"
     }
-  );
+  }
+);
